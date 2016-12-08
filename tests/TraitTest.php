@@ -174,7 +174,7 @@ class TraitTest extends TestCase
     {
         $user = new SoftUser();
 
-        $this->setRestrictedValue($user, 'forceDeleting', true);
+        $this->setRestrictedValue($user, 'softDelete', false);
 
         $this->assertTrue($user->isCascadeDeletesForceDeleting());
     }
@@ -201,17 +201,35 @@ class TraitTest extends TestCase
 
         $query = $user->getCascadeDeletesRelationQuery($user->getCascadeDeletesRelationNames()[0])->getQuery();
 
-        $this->assertNotContains(SoftDeletingScope::class, $query->removedScopes());
+        $hasConstraint = false;
+
+        foreach ((array) $query->getQuery()->wheres as $key => $where) {
+            if ($where['type'] == 'Null' && $where['column'] == $user->getQualifiedDeletedAtColumn()) {
+                $hasConstraint = true;
+                break;
+            }
+        }
+
+        $this->assertTrue($hasConstraint);
     }
 
     public function testCascadeDeletesRelationQueryIncludesTrashedWhenForceDeleting()
     {
         $user = new SoftUser();
 
-        $this->setRestrictedValue($user, 'forceDeleting', true);
+        $this->setRestrictedValue($user, 'softDelete', false);
 
         $query = $user->getCascadeDeletesRelationQuery($user->getCascadeDeletesRelationNames()[0])->getQuery();
 
-        $this->assertContains(SoftDeletingScope::class, $query->removedScopes());
+        $hasConstraint = false;
+
+        foreach ((array) $query->getQuery()->wheres as $key => $where) {
+            if ($where['type'] == 'Null' && $where['column'] == $user->getQualifiedDeletedAtColumn()) {
+                $hasConstraint = true;
+                break;
+            }
+        }
+
+        $this->assertFalse($hasConstraint);
     }
 }

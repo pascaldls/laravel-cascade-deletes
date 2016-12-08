@@ -2,11 +2,9 @@
 
 namespace ShiftOneLabs\LaravelCascadeDeletes\Tests\Models;
 
-use Illuminate\Database\Eloquent\SoftDeletes;
-
 class SoftPost extends Post
 {
-    use SoftDeletes;
+    protected $softDelete = true;
 
     protected $table = 'posts';
 

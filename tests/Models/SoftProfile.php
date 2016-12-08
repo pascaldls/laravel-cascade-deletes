@@ -2,11 +2,9 @@
 
 namespace ShiftOneLabs\LaravelCascadeDeletes\Tests\Models;
 
-use Illuminate\Database\Eloquent\SoftDeletes;
-
 class SoftProfile extends Profile
 {
-    use SoftDeletes;
+    protected $softDelete = true;
 
     protected $table = 'profiles';
 
