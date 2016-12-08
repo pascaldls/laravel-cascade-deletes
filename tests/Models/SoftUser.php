@@ -2,11 +2,11 @@
 
 namespace ShiftOneLabs\LaravelCascadeDeletes\Tests\Models;
 
-use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\SoftDeletingTrait;
 
 class SoftUser extends User
 {
-    use SoftDeletes;
+    use SoftDeletingTrait;
 
     protected $table = 'users';
 
